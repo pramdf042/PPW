@@ -12,7 +12,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score  
 from sklearn import tree
 
-Data, Ekstraksi, lda, LDAkmeans, Model = st.tabs(['Data', 'Ekstraksi Fitur', 'LDA', 'Modelling'])
+Data, Ekstraksi, lda, LDAkmeans, Model = st.tabs(['Data', 'Ekstraksi Fitur', 'LDA', 'LDA kmeans', 'Modelling'])
 
 with Data :
    st.title("""UTS PPW A""")
