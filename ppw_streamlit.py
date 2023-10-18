@@ -12,7 +12,7 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score  
 from sklearn import tree
 
-Data, Ekstraksi, lda, LDAkmeans, Model = st.tabs(['Data', 'Ekstraksi Fitur', 'LDA', 'LDA kmeans', 'Modelling'])
+Data, Ekstraksi, lda, LDAkmeans, Model, Implementasi = st.tabs(['Data', 'Ekstraksi Fitur', 'LDA', 'LDA kmeans', 'Modelling', 'Implementasi'])
 
 with Data :
    st.title("""UTS PPW A""")
@@ -135,3 +135,46 @@ with Model :
                 st.write("Anda Belum Memilih Metode")
     # else:
     #     st.write("Anda Belum Menentukan Jumlah Topik di Menu LDA")
+
+with Implementasi :
+   # Ubah kelas menjadi 0 dan kelas B menjadi 1
+   kelas_dataset_binary = [0 if kelas == 'RPL' else 1 for kelas in data_x['Label']]
+   data_x['Label'] = kelas_dataset_binary
+   
+   # Bagi data menjadi data pelatihan dan data pengujian
+   X = data_x['Dokumen']
+   label = data_x['Label']
+   X_train, X_test, y_train, y_test = train_test_split(X, label, test_size=0.2, random_state=42)
+   
+   # Vektorisasi teks menggunakan TF-IDF
+   tfidf_vectorizer = TfidfVectorizer()
+   X_train_tfidf = tfidf_vectorizer.fit_transform(X_train)
+   X_test_tfidf = tfidf_vectorizer.transform(X_test)
+   
+   # Latih model Naive Bayes
+   nb_classifier = MultinomialNB()
+   nb_classifier.fit(X_train_tfidf, y_train)
+   
+   # Latih model LDA
+   k = 3
+   alpha = 0.1
+   beta = 0.2
+   lda = LatentDirichletAllocation(n_components=k, doc_topic_prior=alpha, topic_word_prior=beta)
+   proporsi_topik_dokumen = lda.fit_transform(X_train_tfidf)
+   
+   # Input dokumen yang ingin diklasifikasikan
+   input_dokumen = st.text_input("Masukkan Abstrak")
+   submit = st.form_submit_button("submit")
+   if submit :
+      st.subheader('Hasil Prediksi')
+      input_vector = tfidf_vectorizer.transform([input_dokumen])
+      
+      # Prediksi kelas menggunakan model Naive Bayes
+      kelas_prediksi = nb_classifier.predict(input_vector)[0]
+      
+      # Prediksi proporsi topik menggunakan model LDA
+      proporsi_topik = lda.transform(input_vector)[0]
+      
+      # Tampilkan hasil prediksi
+      st.write("Prediksi Kelas (Naive Bayes):", "RPL" if kelas_prediksi == 0 else "KK")
+      st.write("Proporsi Topik (LDA):", proporsi_topik)
