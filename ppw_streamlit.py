@@ -14,8 +14,8 @@ from sklearn.cluster import KMeans
 
 
 st.set_page_config(
-    page_title="Implemntasi Adabooost",
-    page_icon='https://cdn-icons-png.flaticon.com/512/1998/1998664.png',
+    page_title="PPW",
+    page_icon=img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQS91LtGD9MoCRfZde90o4A3sVKS3KmJ8hkUWsGMjDIIKH66h1C_2QyvEL-4EPoS1SyMeU&usqp=CAU",
     layout='centered',
     initial_sidebar_state="expanded",
     menu_items={
@@ -32,7 +32,7 @@ st.write("### Dosen Pengampu : Mula'ab, S.Si., M.Kom.",unsafe_allow_html=True)
 with st.container():
     with st.sidebar:
         selected = option_menu(
-        st.write("""<h3 style = "text-align: center;"><img src="https://cdn-icons-png.flaticon.com/512/1998/1998664.png" width="120" height="120"></h3>""",unsafe_allow_html=True), 
+        st.write("""<h3 style = "text-align: center;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQS91LtGD9MoCRfZde90o4A3sVKS3KmJ8hkUWsGMjDIIKH66h1C_2QyvEL-4EPoS1SyMeU&usqp=CAU" width="150" height="120"></h3>""",unsafe_allow_html=True), 
         ["Home", "prepocessing","LDA","K-means","model", "Implementation"], 
             icons=['house', 'bar-chart','check2-square'], menu_icon="cast", default_index=0,
             styles={
