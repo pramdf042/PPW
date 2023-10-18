@@ -15,7 +15,7 @@ from sklearn.cluster import KMeans
 
 st.set_page_config(
     page_title="PPW",
-    page_icon=img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQS91LtGD9MoCRfZde90o4A3sVKS3KmJ8hkUWsGMjDIIKH66h1C_2QyvEL-4EPoS1SyMeU&usqp=CAU",
+    page_icon="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQS91LtGD9MoCRfZde90o4A3sVKS3KmJ8hkUWsGMjDIIKH66h1C_2QyvEL-4EPoS1SyMeU&usqp=CAU",
     layout='centered',
     initial_sidebar_state="expanded",
     menu_items={
