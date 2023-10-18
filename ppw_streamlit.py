@@ -137,6 +137,13 @@ with Model :
     #     st.write("Anda Belum Menentukan Jumlah Topik di Menu LDA")
 
 with Implementasi :
+   import pandas as pd
+   import numpy as np
+   from sklearn.decomposition import LatentDirichletAllocation
+   from sklearn.naive_bayes import MultinomialNB
+   from sklearn.feature_extraction.text import TfidfVectorizer
+   from sklearn.model_selection import train_test_split
+   from sklearn.metrics import accuracy_score
    # Ubah kelas menjadi 0 dan kelas B menjadi 1
    kelas_dataset_binary = [0 if kelas == 'RPL' else 1 for kelas in data_x['Label']]
    data_x['Label'] = kelas_dataset_binary
