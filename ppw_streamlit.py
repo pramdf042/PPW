@@ -145,6 +145,7 @@ with st.container():
 
     if selected =="model" :
             data_x = pd.read_csv('https://raw.githubusercontent.com/pramdf042/PPW/main/Term%20Frequensi%20Berlabel%20Final.csv')
+            data_x = data_x.dropna(subset=['Dokumen'])  # Menghapus baris yang memiliki NaN di kolom 'Dokumen'
             import numpy as np
             kelas_dataset = data_x['Label']
 
@@ -173,38 +174,43 @@ with st.container():
             from sklearn.model_selection import train_test_split
             from sklearn.tree import DecisionTreeClassifier
             from sklearn.neighbors import KNeighborsClassifier
-            from sklearn.naive_bayes import GaussianNB
+            from sklearn.naive_bayes import MultinomialNB
+            from sklearn.feature_extraction.text import TfidfVectorizer
             from sklearn.metrics import accuracy_score
 
             # Bagian ini adalah contoh data Anda. Anda harus menggantinya dengan data nyata Anda.
             # X adalah matriks fitur, y adalah target/label
             # Memisahkan fitur dan label kelas target
-            X = output_proporsi_TD[['Topik 1', 'Topik 2', 'Topik 3']]
-            y = output_proporsi_TD['Label']
+            # Bagi data menjadi data pelatihan dan data pengujian
+            X = data_x['Dokumen']
+            label = data_x['Label']
+            X_train, X_test, y_train, y_test = train_test_split(X, label, test_size=0.2, random_state=42)
 
-            # Bagi data menjadi data pelatihan dan data uji
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+            # Vektorisasi teks menggunakan TF-IDF
+            tfidf_vectorizer = TfidfVectorizer()
+            X_train_tfidf = tfidf_vectorizer.fit_transform(X_train)
+            X_test_tfidf = tfidf_vectorizer.transform(X_test)
 
             # Buat model Decision Tree
             decision_tree_model = DecisionTreeClassifier()
-            decision_tree_model.fit(X_train, y_train)
+            decision_tree_model.fit(X_train_tfidf, y_train)
 
             # Buat model K-Nearest Neighbors (KNN)
             knn_model = KNeighborsClassifier(n_neighbors=5)  # Anda dapat mengubah nilai n_neighbors sesuai kebutuhan
-            knn_model.fit(X_train, y_train)
+            knn_model.fit(X_train_tfidf, y_train)
 
             # Buat model Naive Bayes (Gaussian Naive Bayes)
-            naive_bayes_model = GaussianNB()
-            naive_bayes_model.fit(X_train, y_train)
+            naive_bayes_model = MultinomialNB()
+            naive_bayes_model.fit(X_train_tfidf, y_train)
 
             # Prediksi dengan model Decision Tree
-            y_pred_decision_tree = decision_tree_model.predict(X_test)
+            y_pred_decision_tree = decision_tree_model.predict(X_test_tfidf)
 
             # Prediksi dengan model KNN
-            y_pred_knn = knn_model.predict(X_test)
+            y_pred_knn = knn_model.predict(X_test_tfidf)
 
             # Prediksi dengan model Naive Bayes
-            y_pred_naive_bayes = naive_bayes_model.predict(X_test)
+            y_pred_naive_bayes = naive_bayes_model.predict(X_test_tfidf)
 
             st.write ("Pilih metode yang ingin anda gunakan :")
             met1 = st.checkbox("KNN")
@@ -308,10 +314,6 @@ with st.container():
         X_train_tfidf = tfidf_vectorizer.fit_transform(X_train)
         X_test_tfidf = tfidf_vectorizer.transform(X_test)
 
-        # Latih model Naive Bayes
-        nb_classifier = MultinomialNB()
-        nb_classifier.fit(X_train_tfidf, y_train)
-
         # Latih model LDA
         k = 3
         alpha = 0.1
@@ -319,7 +321,9 @@ with st.container():
         lda = LatentDirichletAllocation(n_components=k, doc_topic_prior=alpha, topic_word_prior=beta)
         proporsi_topik_dokumen = lda.fit_transform(X_train_tfidf)
 
-        
+        import pickle
+        with open('nb.pkl', 'rb') as file:
+        bayes = pickle.load(file)
 
         with st.form("my_form"):
             st.subheader("Implementasi")
@@ -332,7 +336,7 @@ with st.container():
                 st.subheader('Hasil Prediksi')
                 inputs = np.array([input_dokumen])
                 input_norm = np.array(inputs)
-                input_pred = nb_classifier.predict(input_vector)[0]
+                input_pred = nb.predict(input_vector)[0]
             # Menampilkan hasil prediksi
                 if input_pred==0:
                     st.success('RPL')
