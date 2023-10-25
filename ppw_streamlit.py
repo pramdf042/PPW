@@ -323,7 +323,7 @@ with st.container():
 
         import pickle
         with open('nb.pkl', 'rb') as file:
-        bayes = pickle.load(file)
+        nb = pickle.load(file)
 
         with st.form("my_form"):
             st.subheader("Implementasi")
